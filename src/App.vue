@@ -20,14 +20,8 @@
 </template>
 
 <script>
-// import VSimplePagination from '@/components/VSimplePagination';
-
 export default {
   name: 'App',
-
-  // components: {
-  //   VSimplePagination
-  // },
 
   data: () => ({
     /**
