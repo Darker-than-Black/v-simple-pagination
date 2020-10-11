@@ -3,21 +3,30 @@
   "version": "0.1.0",
   "author": "Dmytro Rybachek",
   "private": false,
-  "license": "MIT",
+  "main": "dist/VSimplePagination.umd.min.js",
+  "module": "dist/VSimplePagination.common.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build:lib": "vue-cli-service build --target lib --name VSimplePagination ./src/index.js",
     "lint": "vue-cli-service lint"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Darker-than-Black/v-simple-pagination.git"
   },
+  "bugs": {
+    "url": "https://github.com/Darker-than-Black/v-simple-pagination/issues"
+  },
+  "homepage": "https://github.com/Darker-than-Black/v-simple-pagination",
   "keywords": [
     "vue",
+    "v-simple-pagination",
+    "vue-paginate",
+    "vue-pagination",
     "paginate",
     "pagination",
-    "simple"
+    "vue.js"
   ],
   "dependencies": {
     "core-js": "^3.6.5",

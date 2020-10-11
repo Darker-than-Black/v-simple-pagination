@@ -86,7 +86,7 @@ export default {
           url.searchParams.append(key, params[key])
       )
 
-      return url;
+      return url
     },
   },
 }

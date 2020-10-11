@@ -1,0 +1,1 @@
+export { default as VSimplePagination } from '@/components/VSimplePagination'
