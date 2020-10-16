@@ -973,13 +973,6 @@ module.exports = store.inspectSource;
 
 /***/ }),
 
-/***/ "8bbf":
-/***/ (function(module, exports) {
-
-module.exports = require("vue");
-
-/***/ }),
-
 /***/ "90e3":
 /***/ (function(module, exports) {
 
@@ -1607,10 +1600,6 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// EXTERNAL MODULE: external {"commonjs":"vue","commonjs2":"vue","root":"Vue"}
-var external_commonjs_vue_commonjs2_vue_root_Vue_ = __webpack_require__("8bbf");
-var external_commonjs_vue_commonjs2_vue_root_Vue_default = /*#__PURE__*/__webpack_require__.n(external_commonjs_vue_commonjs2_vue_root_Vue_);
-
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"83920228-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VSimplePagination.vue?vue&type=template&id=7fa6f29e&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{class:_vm.classes.wrapperClass},[(_vm.showPrevNext)?_c('span',{class:_vm.classes.itemClass},[_c('button',{class:[_vm.classes.btnClass, _vm.classes.prevNextClass],attrs:{"disabled":_vm.hasPrev},on:{"click":function($event){return _vm.updatePage(_vm.prevPage)}}},[_vm._t("prevPage",[_vm._v(" Prev ")])],2)]):_vm._e(),(_vm.hasFirst)?[_c('span',{class:_vm.classes.itemClass},[_c('button',{class:[              _vm.firstClass,              _vm.classes.btnClass            ],on:{"click":function($event){return _vm.updatePage(_vm.delta)}}},[_vm._v(" "+_vm._s(_vm.delta)+" ")])]),(_vm.hasFirstBreakView)?_c('span',{class:[_vm.classes.itemClass, _vm.classes.breakViewClass]},[_vm._t("breakView",[_vm._v(" ... ")])],2):_vm._e()]:_vm._e(),_vm._l((_vm.pages),function(page){return _c('span',{key:page,class:_vm.classes.itemClass},[_c('button',{class:[            _vm.setActiveClass(page),            _vm.classes.btnClass          ],on:{"click":function($event){return _vm.updatePage(page)}}},[_vm._v(" "+_vm._s(page)+" ")])])}),(_vm.hasLast)?[(_vm.hasLastBreakView)?_c('span',{class:[_vm.classes.itemClass, _vm.classes.breakViewClass]},[_vm._t("breakView",[_vm._v(" ... ")])],2):_vm._e(),_c('span',{class:_vm.classes.itemClass},[_c('button',{class:[              _vm.lastClass,              _vm.classes.btnClass            ],on:{"click":function($event){return _vm.updatePage(_vm.totalPages)}}},[_vm._v(" "+_vm._s(_vm.totalPages)+" ")])])]:_vm._e(),(_vm.showPrevNext)?_c('span',{class:_vm.classes.itemClass},[_c('button',{class:[_vm.classes.btnClass, _vm.classes.prevNextClass],attrs:{"disabled":_vm.hasNext},on:{"click":function($event){return _vm.updatePage(_vm.nextPage)}}},[_vm._t("nextPage",[_vm._v(" Next ")])],2)]):_vm._e()],2)}
 var staticRenderFns = []
@@ -1894,13 +1883,12 @@ var component = normalizeComponent(
 
 /* harmony default export */ var VSimplePagination = (component.exports);
 // CONCATENATED MODULE: ./src/index.js
-// export { default as VSimplePagination } from '@/components/VSimplePagination'
 
-
-/*Object.keys(Components).forEach(name=>{  Vue.component(name, Components[name]);});*/
-
-external_commonjs_vue_commonjs2_vue_root_Vue_default.a.component('simple-paginate', VSimplePagination);
-/* harmony default export */ var src_0 = (VSimplePagination);
+/* harmony default export */ var src_0 = ({
+  install: function install(Vue) {
+    Vue.component('simple-paginate', VSimplePagination);
+  }
+});
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/entry-lib.js
 
 
