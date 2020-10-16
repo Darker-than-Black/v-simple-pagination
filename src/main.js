@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
-import VSimplePagination from '@/components/VSimplePagination'
+import VSimplePagination from '@/components/SimplePagination'
 
 Vue.config.productionTip = false
 

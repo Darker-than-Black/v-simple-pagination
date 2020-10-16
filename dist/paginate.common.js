@@ -1,14 +1,5 @@
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
-	else if(typeof define === 'function' && define.amd)
-		define([], factory);
-	else if(typeof exports === 'object')
-		exports["VSimplePaginate"] = factory();
-	else
-		root["VSimplePaginate"] = factory();
-})((typeof self !== 'undefined' ? self : this), function() {
-return /******/ (function(modules) { // webpackBootstrap
+module.exports =
+/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -1585,6 +1576,9 @@ module.exports = function (key) {
 // ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, "install", function() { return /* reexport */ install; });
+
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/setPublicPath.js
 // This file is imported into lib/wc client bundles.
 
@@ -1609,12 +1603,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"83920228-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VSimplePagination.vue?vue&type=template&id=7fa6f29e&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"83920228-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/SimplePagination.vue?vue&type=template&id=ec82f99c&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{class:_vm.classes.wrapperClass},[(_vm.showPrevNext)?_c('span',{class:_vm.classes.itemClass},[_c('button',{class:[_vm.classes.btnClass, _vm.classes.prevNextClass],attrs:{"disabled":_vm.hasPrev},on:{"click":function($event){return _vm.updatePage(_vm.prevPage)}}},[_vm._t("prevPage",[_vm._v(" Prev ")])],2)]):_vm._e(),(_vm.hasFirst)?[_c('span',{class:_vm.classes.itemClass},[_c('button',{class:[              _vm.firstClass,              _vm.classes.btnClass            ],on:{"click":function($event){return _vm.updatePage(_vm.delta)}}},[_vm._v(" "+_vm._s(_vm.delta)+" ")])]),(_vm.hasFirstBreakView)?_c('span',{class:[_vm.classes.itemClass, _vm.classes.breakViewClass]},[_vm._t("breakView",[_vm._v(" ... ")])],2):_vm._e()]:_vm._e(),_vm._l((_vm.pages),function(page){return _c('span',{key:page,class:_vm.classes.itemClass},[_c('button',{class:[            _vm.setActiveClass(page),            _vm.classes.btnClass          ],on:{"click":function($event){return _vm.updatePage(page)}}},[_vm._v(" "+_vm._s(page)+" ")])])}),(_vm.hasLast)?[(_vm.hasLastBreakView)?_c('span',{class:[_vm.classes.itemClass, _vm.classes.breakViewClass]},[_vm._t("breakView",[_vm._v(" ... ")])],2):_vm._e(),_c('span',{class:_vm.classes.itemClass},[_c('button',{class:[              _vm.lastClass,              _vm.classes.btnClass            ],on:{"click":function($event){return _vm.updatePage(_vm.totalPages)}}},[_vm._v(" "+_vm._s(_vm.totalPages)+" ")])])]:_vm._e(),(_vm.showPrevNext)?_c('span',{class:_vm.classes.itemClass},[_c('button',{class:[_vm.classes.btnClass, _vm.classes.prevNextClass],attrs:{"disabled":_vm.hasNext},on:{"click":function($event){return _vm.updatePage(_vm.nextPage)}}},[_vm._t("nextPage",[_vm._v(" Next ")])],2)]):_vm._e()],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/VSimplePagination.vue?vue&type=template&id=7fa6f29e&
+// CONCATENATED MODULE: ./src/components/SimplePagination.vue?vue&type=template&id=ec82f99c&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.includes.js
 var es_array_includes = __webpack_require__("caad");
@@ -1625,15 +1619,15 @@ var es_number_constructor = __webpack_require__("a9e3");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.string.includes.js
 var es_string_includes = __webpack_require__("2532");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VSimplePagination.vue?vue&type=script&lang=js&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/SimplePagination.vue?vue&type=script&lang=js&
 
 
 
 var DELTA = 1;
 var SECOND_ELEMENT = 2;
 var EMIT_NAME = 'update-page';
-/* harmony default export */ var VSimplePaginationvue_type_script_lang_js_ = ({
-  name: 'VSimplePagination',
+/* harmony default export */ var SimplePaginationvue_type_script_lang_js_ = ({
+  name: 'SimplePagination',
   props: {
     current: {
       type: Number,
@@ -1769,8 +1763,8 @@ var EMIT_NAME = 'update-page';
     }
   }
 });
-// CONCATENATED MODULE: ./src/components/VSimplePagination.vue?vue&type=script&lang=js&
- /* harmony default export */ var components_VSimplePaginationvue_type_script_lang_js_ = (VSimplePaginationvue_type_script_lang_js_); 
+// CONCATENATED MODULE: ./src/components/SimplePagination.vue?vue&type=script&lang=js&
+ /* harmony default export */ var components_SimplePaginationvue_type_script_lang_js_ = (SimplePaginationvue_type_script_lang_js_); 
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/runtime/componentNormalizer.js
 /* globals __VUE_SSR_CONTEXT__ */
 
@@ -1871,7 +1865,7 @@ function normalizeComponent (
   }
 }
 
-// CONCATENATED MODULE: ./src/components/VSimplePagination.vue
+// CONCATENATED MODULE: ./src/components/SimplePagination.vue
 
 
 
@@ -1880,7 +1874,7 @@ function normalizeComponent (
 /* normalize component */
 
 var component = normalizeComponent(
-  components_VSimplePaginationvue_type_script_lang_js_,
+  components_SimplePaginationvue_type_script_lang_js_,
   render,
   staticRenderFns,
   false,
@@ -1890,14 +1884,15 @@ var component = normalizeComponent(
   
 )
 
-/* harmony default export */ var VSimplePagination = (component.exports);
+/* harmony default export */ var SimplePagination = (component.exports);
 // CONCATENATED MODULE: ./src/index.js
 
-/* harmony default export */ var src_0 = ({
-  install: function install(Vue) {
-    Vue.component('simple-paginate', VSimplePagination);
-  }
-});
+function install(Vue) {
+  if (install.installed) return;
+  install.installed = true;
+  Vue.component('simple-paginate', SimplePagination);
+}
+/* harmony default export */ var src_0 = (SimplePagination);
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/entry-lib.js
 
 
@@ -1936,5 +1931,4 @@ module.exports = NATIVE_SYMBOL
 /***/ })
 
 /******/ });
-});
-//# sourceMappingURL=VSimplePaginate.umd.js.map
+//# sourceMappingURL=paginate.common.js.map

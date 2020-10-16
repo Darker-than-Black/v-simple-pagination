@@ -1,1 +1,1 @@
-import VSimplePagination from '@/components/VSimplePagination'export default {    install(Vue) {        Vue.component('simple-paginate', VSimplePagination)    }}
+import SimplePagination from '@/components/SimplePagination'export function install(Vue) {    if (install.installed) return    install.installed = true    Vue.component('simple-paginate', SimplePagination)}export default SimplePagination

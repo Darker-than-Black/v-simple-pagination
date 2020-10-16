@@ -3,12 +3,17 @@
   "version": "0.1.3",
   "author": "Dmytro Rybachek",
   "private": false,
-  "main": "dist/VSimplePagination.umd.min.js",
-  "module": "dist/VSimplePagination.common.js",
+  "license": "MIT",
+  "main": "dist/paginate.umd.min.js",
+  "module": "dist/paginate.common.js",
+  "unpkg": "dist/paginate.common.js",
+  "browser": {
+    "./sfc": "sfc/components/SimplePagination.vue"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "build:lib": "vue-cli-service build --target lib --name VSimplePaginate ./src/index.js",
+    "build:lib": "vue-cli-service build --target lib --name paginate ./src/index.js",
     "lint": "vue-cli-service lint"
   },
   "repository": {
