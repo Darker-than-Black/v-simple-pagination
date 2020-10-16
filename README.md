@@ -6,6 +6,8 @@
 
 ##### Vue.js (v2.x +) component for make pagination without default styles. This allows you to style the component as you wish.
 
+### [Demo](https://darker-than-black.github.io/v-simple-pagination/demo/)
+
 ## Installation
 
 #### NPM
