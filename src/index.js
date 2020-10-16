@@ -1,1 +1,0 @@
-import SimplePagination from '@/components/SimplePagination'export default SimplePagination

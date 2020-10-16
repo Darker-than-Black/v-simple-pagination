@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <v-simple-pagination
+    <pagination
       :current="currentPage"
       :per-page="perPage"
       :total="total"
@@ -9,7 +9,7 @@
       <template v-slot:prevPage>PREV</template>
       <template v-slot:nextPage>NEXT</template>
       <template v-slot:breakView>...</template>
-    </v-simple-pagination>
+    </pagination>
 
     <ul class="list">
       <li v-for="img in photos" :key="img.id" class="list__item">
@@ -20,8 +20,14 @@
 </template>
 
 <script>
+import Pagination from '@/components/Pagination'
+
 export default {
   name: 'App',
+
+  components: {
+    Pagination,
+  },
 
   data: () => ({
     /**
