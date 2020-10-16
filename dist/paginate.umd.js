@@ -1585,9 +1585,6 @@ module.exports = function (key) {
 // ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, "install", function() { return /* reexport */ install; });
-
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/setPublicPath.js
 // This file is imported into lib/wc client bundles.
 
@@ -1896,11 +1893,6 @@ var component = normalizeComponent(
 /* harmony default export */ var SimplePagination = (component.exports);
 // CONCATENATED MODULE: ./src/index.js
 
-function install(Vue) {
-  if (install.installed) return;
-  install.installed = true;
-  Vue.component('simple-paginate', SimplePagination);
-}
 /* harmony default export */ var src_0 = (SimplePagination);
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/entry-lib.js
 
