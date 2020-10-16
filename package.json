@@ -1,5 +1,5 @@
 {
-  "name": "v-simple-pagination",
+  "name": "v-simple-paginate",
   "version": "0.1.0",
   "author": "Dmytro Rybachek",
   "private": false,
@@ -8,7 +8,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "build:lib": "vue-cli-service build --target lib --name VSimplePagination ./src/index.js",
+    "build:lib": "vue-cli-service build --target lib --name VSimplePaginate ./src/index.js",
     "lint": "vue-cli-service lint"
   },
   "repository": {

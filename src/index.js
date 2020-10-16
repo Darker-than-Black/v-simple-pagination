@@ -1,1 +1,1 @@
-export { default as VSimplePagination } from '@/components/VSimplePagination'
+// export { default as VSimplePagination } from '@/components/VSimplePagination'import Vue from 'vue'import Pagination from '@/components/VSimplePagination'/*Object.keys(Components).forEach(name=>{  Vue.component(name, Components[name]);});*/Vue.component('simple-paginate', Pagination)export default Pagination
