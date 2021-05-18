@@ -1,10 +1,12 @@
 <template>
   <div class="container">
     <pagination
-      :current="currentPage"
+      :value="currentPage"
       :per-page="perPage"
       :total="total"
-      @update-page="getData"
+      activeClass="paginate-active"
+      btnHideClass="paginate-hide"
+      @input="getData"
     >
       <template v-slot:prevPage>PREV</template>
       <template v-slot:nextPage>NEXT</template>
@@ -99,6 +101,14 @@ export default {
 </script>
 
 <style>
+.paginate-active {
+  border: 2px solid red;
+}
+
+.paginate-hide {
+  display: none;
+}
+
 html {
   box-sizing: border-box;
 }
@@ -114,10 +124,6 @@ html {
   align-items: center;
   flex-direction: column;
   margin: 1em;
-}
-
-.active {
-  border: 2px solid red;
 }
 
 .list {

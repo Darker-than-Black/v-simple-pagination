@@ -87,6 +87,37 @@ module.exports =
 /************************************************************************/
 /******/ ({
 
+/***/ "0366":
+/***/ (function(module, exports, __webpack_require__) {
+
+var aFunction = __webpack_require__("1c0b");
+
+// optional / simple context binding
+module.exports = function (fn, that, length) {
+  aFunction(fn);
+  if (that === undefined) return fn;
+  switch (length) {
+    case 0: return function () {
+      return fn.call(that);
+    };
+    case 1: return function (a) {
+      return fn.call(that, a);
+    };
+    case 2: return function (a, b) {
+      return fn.call(that, a, b);
+    };
+    case 3: return function (a, b, c) {
+      return fn.call(that, a, b, c);
+    };
+  }
+  return function (/* ...args */) {
+    return fn.apply(that, arguments);
+  };
+};
+
+
+/***/ }),
+
 /***/ "06cf":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -141,6 +172,18 @@ module.exports = getBuiltIn('document', 'documentElement');
 
 /***/ }),
 
+/***/ "1c0b":
+/***/ (function(module, exports) {
+
+module.exports = function (it) {
+  if (typeof it != 'function') {
+    throw TypeError(String(it) + ' is not a function');
+  } return it;
+};
+
+
+/***/ }),
+
 /***/ "1d80":
 /***/ (function(module, exports) {
 
@@ -149,6 +192,32 @@ module.exports = getBuiltIn('document', 'documentElement');
 module.exports = function (it) {
   if (it == undefined) throw TypeError("Can't call method on " + it);
   return it;
+};
+
+
+/***/ }),
+
+/***/ "1dde":
+/***/ (function(module, exports, __webpack_require__) {
+
+var fails = __webpack_require__("d039");
+var wellKnownSymbol = __webpack_require__("b622");
+var V8_VERSION = __webpack_require__("2d00");
+
+var SPECIES = wellKnownSymbol('species');
+
+module.exports = function (METHOD_NAME) {
+  // We can't use this feature detection in V8 since it causes
+  // deoptimization and serious performance degradation
+  // https://github.com/zloirock/core-js/issues/677
+  return V8_VERSION >= 51 || !fails(function () {
+    var array = [];
+    var constructor = array.constructor = {};
+    constructor[SPECIES] = function () {
+      return { foo: 1 };
+    };
+    return array[METHOD_NAME](Boolean).foo !== 1;
+  });
 };
 
 
@@ -251,24 +320,39 @@ exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
 
 /***/ }),
 
-/***/ "2532":
+/***/ "2d00":
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+var global = __webpack_require__("da84");
+var userAgent = __webpack_require__("342f");
 
-var $ = __webpack_require__("23e7");
-var notARegExp = __webpack_require__("5a34");
-var requireObjectCoercible = __webpack_require__("1d80");
-var correctIsRegExpLogic = __webpack_require__("ab13");
+var process = global.process;
+var versions = process && process.versions;
+var v8 = versions && versions.v8;
+var match, version;
 
-// `String.prototype.includes` method
-// https://tc39.github.io/ecma262/#sec-string.prototype.includes
-$({ target: 'String', proto: true, forced: !correctIsRegExpLogic('includes') }, {
-  includes: function includes(searchString /* , position = 0 */) {
-    return !!~String(requireObjectCoercible(this))
-      .indexOf(notARegExp(searchString), arguments.length > 1 ? arguments[1] : undefined);
+if (v8) {
+  match = v8.split('.');
+  version = match[0] + match[1];
+} else if (userAgent) {
+  match = userAgent.match(/Edge\/(\d+)/);
+  if (!match || match[1] >= 74) {
+    match = userAgent.match(/Chrome\/(\d+)/);
+    if (match) version = match[1];
   }
-});
+}
+
+module.exports = version && +version;
+
+
+/***/ }),
+
+/***/ "342f":
+/***/ (function(module, exports, __webpack_require__) {
+
+var getBuiltIn = __webpack_require__("d066");
+
+module.exports = getBuiltIn('navigator', 'userAgent') || '';
 
 
 /***/ }),
@@ -340,52 +424,6 @@ module.exports = fails(function () {
 
 /***/ }),
 
-/***/ "44d2":
-/***/ (function(module, exports, __webpack_require__) {
-
-var wellKnownSymbol = __webpack_require__("b622");
-var create = __webpack_require__("7c73");
-var definePropertyModule = __webpack_require__("9bf2");
-
-var UNSCOPABLES = wellKnownSymbol('unscopables');
-var ArrayPrototype = Array.prototype;
-
-// Array.prototype[@@unscopables]
-// https://tc39.github.io/ecma262/#sec-array.prototype-@@unscopables
-if (ArrayPrototype[UNSCOPABLES] == undefined) {
-  definePropertyModule.f(ArrayPrototype, UNSCOPABLES, {
-    configurable: true,
-    value: create(null)
-  });
-}
-
-// add a key to Array.prototype[@@unscopables]
-module.exports = function (key) {
-  ArrayPrototype[UNSCOPABLES][key] = true;
-};
-
-
-/***/ }),
-
-/***/ "44e7":
-/***/ (function(module, exports, __webpack_require__) {
-
-var isObject = __webpack_require__("861d");
-var classof = __webpack_require__("c6b6");
-var wellKnownSymbol = __webpack_require__("b622");
-
-var MATCH = wellKnownSymbol('match');
-
-// `IsRegExp` abstract operation
-// https://tc39.github.io/ecma262/#sec-isregexp
-module.exports = function (it) {
-  var isRegExp;
-  return isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : classof(it) == 'RegExp');
-};
-
-
-/***/ }),
-
 /***/ "4930":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -435,6 +473,32 @@ module.exports = {
   // https://tc39.github.io/ecma262/#sec-array.prototype.indexof
   indexOf: createMethod(false)
 };
+
+
+/***/ }),
+
+/***/ "4de4":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $ = __webpack_require__("23e7");
+var $filter = __webpack_require__("b727").filter;
+var arrayMethodHasSpeciesSupport = __webpack_require__("1dde");
+var arrayMethodUsesToLength = __webpack_require__("ae40");
+
+var HAS_SPECIES_SUPPORT = arrayMethodHasSpeciesSupport('filter');
+// Edge 14- issue
+var USES_TO_LENGTH = arrayMethodUsesToLength('filter');
+
+// `Array.prototype.filter` method
+// https://tc39.github.io/ecma262/#sec-array.prototype.filter
+// with adding support of @@species
+$({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT || !USES_TO_LENGTH }, {
+  filter: function filter(callbackfn /* , thisArg */) {
+    return $filter(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
+  }
+});
 
 
 /***/ }),
@@ -547,20 +611,6 @@ module.exports = {
 
 /***/ }),
 
-/***/ "5a34":
-/***/ (function(module, exports, __webpack_require__) {
-
-var isRegExp = __webpack_require__("44e7");
-
-module.exports = function (it) {
-  if (isRegExp(it)) {
-    throw TypeError("The method doesn't accept regular expressions");
-  } return it;
-};
-
-
-/***/ }),
-
 /***/ "5c6c":
 /***/ (function(module, exports) {
 
@@ -571,6 +621,33 @@ module.exports = function (bitmap, value) {
     writable: !(bitmap & 4),
     value: value
   };
+};
+
+
+/***/ }),
+
+/***/ "65f0":
+/***/ (function(module, exports, __webpack_require__) {
+
+var isObject = __webpack_require__("861d");
+var isArray = __webpack_require__("e8b5");
+var wellKnownSymbol = __webpack_require__("b622");
+
+var SPECIES = wellKnownSymbol('species');
+
+// `ArraySpeciesCreate` abstract operation
+// https://tc39.github.io/ecma262/#sec-arrayspeciescreate
+module.exports = function (originalArray, length) {
+  var C;
+  if (isArray(originalArray)) {
+    C = originalArray.constructor;
+    // cross-realm fallback
+    if (typeof C == 'function' && (C === Array || isArray(C.prototype))) C = undefined;
+    else if (isObject(C)) {
+      C = C[SPECIES];
+      if (C === null) C = undefined;
+    }
+  } return new (C === undefined ? Array : C)(length === 0 ? 0 : length);
 };
 
 
@@ -730,6 +807,20 @@ module.exports = [
   'toString',
   'valueOf'
 ];
+
+
+/***/ }),
+
+/***/ "7b0b":
+/***/ (function(module, exports, __webpack_require__) {
+
+var requireObjectCoercible = __webpack_require__("1d80");
+
+// `ToObject` abstract operation
+// https://tc39.github.io/ecma262/#sec-toobject
+module.exports = function (argument) {
+  return Object(requireObjectCoercible(argument));
+};
 
 
 /***/ }),
@@ -1058,6 +1149,24 @@ exports.f = DESCRIPTORS ? nativeDefineProperty : function defineProperty(O, P, A
 
 /***/ }),
 
+/***/ "a640":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var fails = __webpack_require__("d039");
+
+module.exports = function (METHOD_NAME, argument) {
+  var method = [][METHOD_NAME];
+  return !!method && fails(function () {
+    // eslint-disable-next-line no-useless-call,no-throw-literal
+    method.call(null, argument || function () { throw 1; }, 1);
+  });
+};
+
+
+/***/ }),
+
 /***/ "a691":
 /***/ (function(module, exports) {
 
@@ -1159,28 +1268,6 @@ if (isForced(NUMBER, !NativeNumber(' 0o1') || !NativeNumber('0b1') || NativeNumb
 
 /***/ }),
 
-/***/ "ab13":
-/***/ (function(module, exports, __webpack_require__) {
-
-var wellKnownSymbol = __webpack_require__("b622");
-
-var MATCH = wellKnownSymbol('match');
-
-module.exports = function (METHOD_NAME) {
-  var regexp = /./;
-  try {
-    '/./'[METHOD_NAME](regexp);
-  } catch (e) {
-    try {
-      regexp[MATCH] = false;
-      return '/./'[METHOD_NAME](regexp);
-    } catch (f) { /* empty */ }
-  } return false;
-};
-
-
-/***/ }),
-
 /***/ "ae40":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1234,6 +1321,78 @@ module.exports = function (name) {
     if (NATIVE_SYMBOL && has(Symbol, name)) WellKnownSymbolsStore[name] = Symbol[name];
     else WellKnownSymbolsStore[name] = createWellKnownSymbol('Symbol.' + name);
   } return WellKnownSymbolsStore[name];
+};
+
+
+/***/ }),
+
+/***/ "b727":
+/***/ (function(module, exports, __webpack_require__) {
+
+var bind = __webpack_require__("0366");
+var IndexedObject = __webpack_require__("44ad");
+var toObject = __webpack_require__("7b0b");
+var toLength = __webpack_require__("50c4");
+var arraySpeciesCreate = __webpack_require__("65f0");
+
+var push = [].push;
+
+// `Array.prototype.{ forEach, map, filter, some, every, find, findIndex }` methods implementation
+var createMethod = function (TYPE) {
+  var IS_MAP = TYPE == 1;
+  var IS_FILTER = TYPE == 2;
+  var IS_SOME = TYPE == 3;
+  var IS_EVERY = TYPE == 4;
+  var IS_FIND_INDEX = TYPE == 6;
+  var NO_HOLES = TYPE == 5 || IS_FIND_INDEX;
+  return function ($this, callbackfn, that, specificCreate) {
+    var O = toObject($this);
+    var self = IndexedObject(O);
+    var boundFunction = bind(callbackfn, that, 3);
+    var length = toLength(self.length);
+    var index = 0;
+    var create = specificCreate || arraySpeciesCreate;
+    var target = IS_MAP ? create($this, length) : IS_FILTER ? create($this, 0) : undefined;
+    var value, result;
+    for (;length > index; index++) if (NO_HOLES || index in self) {
+      value = self[index];
+      result = boundFunction(value, index, O);
+      if (TYPE) {
+        if (IS_MAP) target[index] = result; // map
+        else if (result) switch (TYPE) {
+          case 3: return true;              // some
+          case 5: return value;             // find
+          case 6: return index;             // findIndex
+          case 2: push.call(target, value); // filter
+        } else if (IS_EVERY) return false;  // every
+      }
+    }
+    return IS_FIND_INDEX ? -1 : IS_SOME || IS_EVERY ? IS_EVERY : target;
+  };
+};
+
+module.exports = {
+  // `Array.prototype.forEach` method
+  // https://tc39.github.io/ecma262/#sec-array.prototype.foreach
+  forEach: createMethod(0),
+  // `Array.prototype.map` method
+  // https://tc39.github.io/ecma262/#sec-array.prototype.map
+  map: createMethod(1),
+  // `Array.prototype.filter` method
+  // https://tc39.github.io/ecma262/#sec-array.prototype.filter
+  filter: createMethod(2),
+  // `Array.prototype.some` method
+  // https://tc39.github.io/ecma262/#sec-array.prototype.some
+  some: createMethod(3),
+  // `Array.prototype.every` method
+  // https://tc39.github.io/ecma262/#sec-array.prototype.every
+  every: createMethod(4),
+  // `Array.prototype.find` method
+  // https://tc39.github.io/ecma262/#sec-array.prototype.find
+  find: createMethod(5),
+  // `Array.prototype.findIndex` method
+  // https://tc39.github.io/ecma262/#sec-array.prototype.findIndex
+  findIndex: createMethod(6)
 };
 
 
@@ -1321,6 +1480,36 @@ module.exports = g;
 
 /***/ }),
 
+/***/ "c975":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $ = __webpack_require__("23e7");
+var $indexOf = __webpack_require__("4d64").indexOf;
+var arrayMethodIsStrict = __webpack_require__("a640");
+var arrayMethodUsesToLength = __webpack_require__("ae40");
+
+var nativeIndexOf = [].indexOf;
+
+var NEGATIVE_ZERO = !!nativeIndexOf && 1 / [1].indexOf(1, -0) < 0;
+var STRICT_METHOD = arrayMethodIsStrict('indexOf');
+var USES_TO_LENGTH = arrayMethodUsesToLength('indexOf', { ACCESSORS: true, 1: 0 });
+
+// `Array.prototype.indexOf` method
+// https://tc39.github.io/ecma262/#sec-array.prototype.indexof
+$({ target: 'Array', proto: true, forced: NEGATIVE_ZERO || !STRICT_METHOD || !USES_TO_LENGTH }, {
+  indexOf: function indexOf(searchElement /* , fromIndex = 0 */) {
+    return NEGATIVE_ZERO
+      // convert -0 to +0
+      ? nativeIndexOf.apply(this, arguments) || 0
+      : $indexOf(this, searchElement, arguments.length > 1 ? arguments[1] : undefined);
+  }
+});
+
+
+/***/ }),
+
 /***/ "ca84":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1341,32 +1530,6 @@ module.exports = function (object, names) {
   }
   return result;
 };
-
-
-/***/ }),
-
-/***/ "caad":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var $ = __webpack_require__("23e7");
-var $includes = __webpack_require__("4d64").includes;
-var addToUnscopables = __webpack_require__("44d2");
-var arrayMethodUsesToLength = __webpack_require__("ae40");
-
-var USES_TO_LENGTH = arrayMethodUsesToLength('indexOf', { ACCESSORS: true, 1: 0 });
-
-// `Array.prototype.includes` method
-// https://tc39.github.io/ecma262/#sec-array.prototype.includes
-$({ target: 'Array', proto: true, forced: !USES_TO_LENGTH }, {
-  includes: function includes(el /* , fromIndex = 0 */) {
-    return $includes(this, el, arguments.length > 1 ? arguments[1] : undefined);
-  }
-});
-
-// https://tc39.github.io/ecma262/#sec-array.prototype-@@unscopables
-addToUnscopables('includes');
 
 
 /***/ }),
@@ -1554,6 +1717,20 @@ module.exports = function (target, source) {
 
 /***/ }),
 
+/***/ "e8b5":
+/***/ (function(module, exports, __webpack_require__) {
+
+var classof = __webpack_require__("c6b6");
+
+// `IsArray` abstract operation
+// https://tc39.github.io/ecma262/#sec-isarray
+module.exports = Array.isArray || function isArray(arg) {
+  return classof(arg) == 'Array';
+};
+
+
+/***/ }),
+
 /***/ "f772":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1600,33 +1777,36 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"670c8012-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Pagination.vue?vue&type=template&id=374fbf6d&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{class:_vm.classes.wrapperClass},[(_vm.showPrevNext)?_c('span',{class:_vm.classes.itemClass},[_c('button',{class:[_vm.classes.btnClass, _vm.classes.prevNextClass],attrs:{"disabled":_vm.hasPrev},on:{"click":function($event){return _vm.updatePage(_vm.prevPage)}}},[_vm._t("prevPage",[_vm._v(" Prev ")])],2)]):_vm._e(),(_vm.hasFirst)?[_c('span',{class:_vm.classes.itemClass},[_c('button',{class:[              _vm.firstClass,              _vm.classes.btnClass            ],on:{"click":function($event){return _vm.updatePage(_vm.delta)}}},[_vm._v(" "+_vm._s(_vm.delta)+" ")])]),(_vm.hasFirstBreakView)?_c('span',{class:[_vm.classes.itemClass, _vm.classes.breakViewClass]},[_vm._t("breakView",[_vm._v(" ... ")])],2):_vm._e()]:_vm._e(),_vm._l((_vm.pages),function(page){return _c('span',{key:page,class:_vm.classes.itemClass},[_c('button',{class:[            _vm.setActiveClass(page),            _vm.classes.btnClass          ],on:{"click":function($event){return _vm.updatePage(page)}}},[_vm._v(" "+_vm._s(page)+" ")])])}),(_vm.hasLast)?[(_vm.hasLastBreakView)?_c('span',{class:[_vm.classes.itemClass, _vm.classes.breakViewClass]},[_vm._t("breakView",[_vm._v(" ... ")])],2):_vm._e(),_c('span',{class:_vm.classes.itemClass},[_c('button',{class:[              _vm.lastClass,              _vm.classes.btnClass            ],on:{"click":function($event){return _vm.updatePage(_vm.totalPages)}}},[_vm._v(" "+_vm._s(_vm.totalPages)+" ")])])]:_vm._e(),(_vm.showPrevNext)?_c('span',{class:_vm.classes.itemClass},[_c('button',{class:[_vm.classes.btnClass, _vm.classes.prevNextClass],attrs:{"disabled":_vm.hasNext},on:{"click":function($event){return _vm.updatePage(_vm.nextPage)}}},[_vm._t("nextPage",[_vm._v(" Next ")])],2)]):_vm._e()],2)}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0be282f8-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Pagination.vue?vue&type=template&id=1696864d&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{class:_vm.classes.wrapperClass},[(_vm.showPrevNext)?_c('span',{class:_vm.classes.itemClass},[_c('button',{class:[_vm.classes.btnClass, _vm.classes.prevNextClass],attrs:{"disabled":_vm.hasPrev},on:{"click":_vm.prevPage}},[_vm._t("prevPage",[_vm._v(" Prev ")])],2)]):_vm._e(),_vm._l((_vm.renderBtnsArray),function(page,index){return [(_vm.hasRenderDots(index))?_c('span',{key:index + 100,class:[              _vm.hasHideDot(index),              _vm.classes.itemClass,              _vm.classes.breakViewClass          ]},[_vm._t("breakView",[_vm._v(" ... ")])],2):_vm._e(),_c('span',{key:index,class:[_vm.classes.itemClass, _vm.hasHideNavBtn(page)]},[_c('button',{class:[_vm.setActiveClass(page), _vm.classes.btnClass],on:{"click":function($event){return _vm.updatePage(page)}}},[_vm._v(" "+_vm._s(page)+" ")])])]}),(_vm.showPrevNext)?_c('span',{class:_vm.classes.itemClass},[_c('button',{class:[_vm.classes.btnClass, _vm.classes.prevNextClass],attrs:{"disabled":_vm.hasNext},on:{"click":_vm.nextPage}},[_vm._t("nextPage",[_vm._v(" Next ")])],2)]):_vm._e()],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/Pagination.vue?vue&type=template&id=374fbf6d&
+// CONCATENATED MODULE: ./src/components/Pagination.vue?vue&type=template&id=1696864d&
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.includes.js
-var es_array_includes = __webpack_require__("caad");
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.filter.js
+var es_array_filter = __webpack_require__("4de4");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.index-of.js
+var es_array_index_of = __webpack_require__("c975");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.number.constructor.js
 var es_number_constructor = __webpack_require__("a9e3");
-
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.string.includes.js
-var es_string_includes = __webpack_require__("2532");
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Pagination.vue?vue&type=script&lang=js&
 
 
 
 var DELTA = 1;
-var SECOND_ELEMENT = 2;
-var EMIT_NAME = 'update-page';
+var RADIUS = 2;
+var FIRST_PAGE_INDEX = 0;
+var AFTER_FIRST_ELEMENTS_INDEX = 2;
+var EMIT_NAME = 'input';
+var EMPTY = '';
 /* harmony default export */ var Paginationvue_type_script_lang_js_ = ({
   name: 'Pagination',
   props: {
-    current: {
+    value: {
       type: Number,
       required: true
     },
@@ -1640,7 +1820,7 @@ var EMIT_NAME = 'update-page';
     },
     pageRange: {
       type: Number,
-      default: 2
+      default: RADIUS
     },
     showPrevNext: {
       type: Boolean,
@@ -1651,112 +1831,154 @@ var EMIT_NAME = 'update-page';
       default: function _default() {
         return {
           wrapperClass: 'v-simple-pagination',
-          itemClass: '',
-          btnClass: '',
-          breakViewClass: '',
-          prevNextClass: ''
+          itemClass: EMPTY,
+          btnClass: EMPTY,
+          breakViewClass: EMPTY,
+          prevNextClass: EMPTY
         };
       }
     },
     activeClass: {
       type: String,
       default: 'active'
+    },
+    btnHideClass: {
+      type: String,
+      default: 'hide'
     }
   },
-  data: function data() {
-    return {
-      delta: DELTA,
-      secondElement: SECOND_ELEMENT
-    };
-  },
   computed: {
-    /**     * @returns {number}     */
-    rangeStart: function rangeStart() {
-      var start = this.current - this.pageRange;
-      return start >= this.delta ? start : this.delta;
+    /**     * D = 2 * R     * @return {number}     */
+    diameter: function diameter() {
+      return this.pageRange * RADIUS;
     },
 
-    /**     * @returns {number}     */
-    rangeEnd: function rangeEnd() {
-      var end = this.current + this.pageRange;
-      return end < this.totalPages ? end : this.totalPages;
+    /**     * Number of pages     * @return {number}     */
+    countOfPages: function countOfPages() {
+      var ZERO = 0;
+      return Math.ceil(this.total / this.perPage) || ZERO;
     },
 
-    /**     * @returns {number[]}     */
-    pages: function pages() {
-      var pages = [];
+    /**     * @return {number[]}     */
+    renderBtnsArray: function renderBtnsArray() {
+      var array = [DELTA];
+      var firstPage = this.value - this.getDynamicRadius;
+      var lastPage = this.value + this.getDynamicRadius;
 
-      for (var i = this.rangeStart; i <= this.rangeEnd; i++) {
-        pages.push(i);
+      for (var i = firstPage; i <= lastPage; i++) {
+        if (i >= DELTA && i <= this.countOfPages) {
+          array.push(i);
+        }
       }
 
-      return pages;
+      array.push(this.countOfPages);
+      return array.filter(function (item, index) {
+        return array.indexOf(item) === index;
+      });
     },
 
-    /**     * @returns {number}     */
-    nextPage: function nextPage() {
-      return this.current + this.delta;
+    /**     * @return {number}     */
+    pageIndex: function pageIndex() {
+      return this.value - DELTA;
     },
 
-    /**     * @returns {number}     */
-    prevPage: function prevPage() {
-      return this.current - this.delta;
+    /**     * Dynamic radius to distribute the visibility of points     * @return {number}     */
+    getDynamicRadius: function getDynamicRadius() {
+      if (this.pageIndex === FIRST_PAGE_INDEX || this.pageIndex === this.countOfPages - DELTA) {
+        return this.diameter;
+      }
+
+      if (this.pageIndex === DELTA || this.pageIndex === this.countOfPages - AFTER_FIRST_ELEMENTS_INDEX) {
+        return this.diameter - DELTA;
+      }
+
+      return this.pageRange;
     },
 
-    /**     * @returns {number}     */
-    totalPages: function totalPages() {
-      return Math.ceil(this.total / this.perPage) || this.delta;
+    /**     * Bottom of visible border elements     * @return {number}     */
+    bottomOfBorder: function bottomOfBorder() {
+      return this.pageIndex - this.renderBtnsArray.length;
     },
 
-    /**     * @returns {boolean}     */
-    hasFirst: function hasFirst() {
-      return this.rangeStart !== this.delta;
-    },
-
-    /**     * @returns {boolean}     */
-    hasLast: function hasLast() {
-      return this.rangeEnd < this.totalPages;
+    /**     * Top of visible border elements     * @return {number}     */
+    topOfBorder: function topOfBorder() {
+      return this.pageIndex + this.renderBtnsArray.length;
     },
 
     /**     * @returns {boolean}     */
     hasPrev: function hasPrev() {
-      return this.current <= this.delta;
+      return this.value <= DELTA;
     },
 
     /**     * @returns {boolean}     */
     hasNext: function hasNext() {
-      return this.current >= this.totalPages;
-    },
-
-    /**     * @returns {boolean}     */
-    hasFirstBreakView: function hasFirstBreakView() {
-      return !this.pages.includes(this.secondElement);
-    },
-
-    /**     * @returns {boolean}     */
-    hasLastBreakView: function hasLastBreakView() {
-      return !this.pages.includes(this.totalPages - this.delta);
-    },
-
-    /**     * @returns {string}     */
-    firstClass: function firstClass() {
-      return this.current === this.delta ? this.activeClass : '';
-    },
-
-    /**     * @returns {string}     */
-    lastClass: function lastClass() {
-      return this.current === this.totalPages ? this.activeClass : '';
+      return this.value >= this.countOfPages;
     }
   },
   methods: {
-    /**     * @param {number} page     */
-    updatePage: function updatePage(page) {
-      this.$emit(EMIT_NAME, page);
+    /**     * @param {number} page     * @return {string}     */
+    setActiveClass: function setActiveClass(page) {
+      return page === this.value ? this.activeClass : EMPTY;
     },
 
-    /**     * @param {number} page     * @returns {string}     */
-    setActiveClass: function setActiveClass(page) {
-      return this.current === page ? this.activeClass : '';
+    /**     * @param {number} page     * @return {string}     */
+    hasHideNavBtn: function hasHideNavBtn(page) {
+      var pageIndex = page - DELTA;
+      var hide = !(pageIndex >= this.bottomOfBorder && pageIndex <= this.topOfBorder) && !this.hasFirstOfLastPage(page);
+      return hide ? this.btnHideClass : EMPTY;
+    },
+
+    /**     * @param {number} index     * @return {boolean}     */
+    hasRenderDots: function hasRenderDots(index) {
+      var sufficientNumberOfElements = this.countOfPages > this.diameter; // sufficient number of the elements
+
+      var isSecondIndex = index === DELTA; // should render after first of the element
+
+      var isBeforeListIndex = index === this.renderBtnsArray.length - DELTA; // should render before last of the element
+
+      return sufficientNumberOfElements && (isSecondIndex || isBeforeListIndex);
+    },
+
+    /**     * @param {number} index     * @return {string}     */
+    hasHideDot: function hasHideDot(index) {
+      var hide = this.renderBtnsArray.indexOf(this.countOfPages - DELTA) >= FIRST_PAGE_INDEX;
+
+      if (index === DELTA) {
+        hide = this.renderBtnsArray.indexOf(AFTER_FIRST_ELEMENTS_INDEX) >= FIRST_PAGE_INDEX;
+      }
+
+      return hide ? this.btnHideClass : EMPTY;
+    },
+
+    /**     * @param {number} page     * @return {boolean}     */
+    hasFirstOfLastPage: function hasFirstOfLastPage(page) {
+      return page === DELTA || page === this.countOfPages;
+    },
+
+    /*--- EMIT OF PAGE NUMBER ---*/
+    nextPage: function nextPage() {
+      if (this.value < this.countOfPages) {
+        var currentPage = this.value + DELTA;
+        this.input(currentPage);
+      }
+    },
+    prevPage: function prevPage() {
+      if (this.value > DELTA) {
+        var currentPage = this.value - DELTA;
+        this.input(currentPage);
+      }
+    },
+
+    /**     * @param {number} index     */
+    updatePage: function updatePage(index) {
+      if (index !== this.value) {
+        this.input(index);
+      }
+    },
+
+    /**     * @param {number} page     * @return {number}     */
+    input: function input(page) {
+      this.$emit(EMIT_NAME, page);
     }
   }
 });

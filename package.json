@@ -1,6 +1,6 @@
 {
   "name": "v-simple-paginate",
-  "version": "1.0.5",
+  "version": "2.0.0",
   "description": "A simple pagination component for Vue.js",
   "author": "Dmytro Rybachek",
   "private": false,
