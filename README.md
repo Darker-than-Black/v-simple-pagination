@@ -26,7 +26,7 @@ $ yarn add v-simple-paginate
 <!-- use the latest release -->
 <script src="https://unpkg.com/v-simple-paginate@latest"></script>
 <!-- or use the specify version -->
-<script src="https://unpkg.com/v-simple-paginate@0.1.0"></script>
+<script src="https://unpkg.com/v-simple-paginate@2.0.0"></script>
 ```
 
 ## Register the component
@@ -62,10 +62,10 @@ export default {
 
 ```html
 <paginate
-  :current="currentPage"
+  :value="currentPage"
   :per-page="perPage"
   :total="total"
-  @update-page="callback()"
+  @input="callback()"
 />
 ```
 
@@ -75,10 +75,9 @@ So this is also available
 
 ```html
 <paginate
-  :current="currentPage"
+  v-model="currentPage"
   :perPage="perPage"
   :total="total"
-  @updatePage="callback()"
 />
 ```
 
@@ -86,10 +85,10 @@ So this is also available
 ```html
 <template>
   <paginate
-    :current="currentPage"
+    :value="currentPage"
     :per-page="perPage"
     :total="total"
-    @update-page="callback"
+    @input="callback"
   />
 </template>
 
@@ -115,6 +114,10 @@ export default {
 .active {
     background-color: red;
 }
+
+.hide {
+    display: none;
+}
 </style>
 ```
 
@@ -122,12 +125,13 @@ export default {
 
 | Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Type | Required | Description |
 | ----------------- | :--- | :--- | :--- |
-| `current` | `Number` | **true** | Current page. |
+| `value` | `Number` | **true** | Current page. |
 | `perPage` | `Number` | **true** | Number of items per page. |
 | `total` | `Number` | **true** | Total items. |
 | `pageRange` | `Number` | false | The range of visible elements around the active page. **Default: 2** |
 | `showPrevNext` | `Boolean` | false | Will the *previous* and *next* buttons be visible. **Default: true** |
 | `activeClass` | `String` | false | CSS class name for active page element. **Default: 'active'** |
+| `btnHideClass` | `String` | false | CSS class name for active page element. **Default: 'active'** |
 | `classes` | `Object` | false | An object with CSS classes to customization the component. |
 
 ##### **About props `classes`**
@@ -162,10 +166,10 @@ Default:
 **Example**
 ```html
 <paginate
-  :current="currentPage"
+  :value="currentPage"
   :perPage="perPage"
   :total="total"
-  @updatePage="callback"
+  @input="callback"
 >
   <template v-slot:prevPage>PREV</template>
 
@@ -177,7 +181,7 @@ Default:
 
 ## Emit
 
-**Emit:** `update-page` is a callback with the param `page number` to update the current page.
+**Emit:** `input` is a callback with the param `page number` to update the current page.
 
 ## License
 
